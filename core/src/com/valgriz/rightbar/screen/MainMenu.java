@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.valgriz.rightbar.Main;
 
+
 /**
  * Created by Steven on 7/9/2015.
  */
@@ -33,8 +34,16 @@ public class MainMenu implements Screen {
 	private Map mapButtonScores;
 	private Map mapButtonHelp;
 
+	private Main main;
+
+	int lastTouchX;
+	int lastTouchY;
+
+	String note;
 
 	public MainMenu(Main main){
+		this.main = main;
+
 		batch = new SpriteBatch();
 		backdrop = new Texture("menu/backdrop.png");
 		logoTop = new Texture("menu/logo_top.png");
@@ -61,10 +70,29 @@ public class MainMenu implements Screen {
 
 	}
 
-	@Override
+	public void update(){
+		if(Gdx.input.justTouched()){
+			lastTouchX = Gdx.input.getX();
+			lastTouchY = Gdx.input.getY();
+			if(mapButtonPlay.contains(lastTouchX, lastTouchY)){
+				note = "Play Pressed";
+				main.setScreen(new Game(main));
+			} else if (mapButtonScores.contains(lastTouchX, lastTouchY)){
+				note = "Scores Pressed";
+			} else if (mapButtonHelp.contains(lastTouchX, lastTouchY)){
+				note = "Help Pressed";
+			} else {
+				note = null;
+			}
+		}
+	}
+
 	public void render(float delta) {
 		Gdx.gl.glClearColor(1, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+		update();
+
 		batch.begin();
 
 		batch.draw(backdrop, mapBackdrop.getOutputX(), mapBackdrop.getOutputY(), mapBackdrop.getOutputWidth(), mapBackdrop.getOutputHeight());
@@ -76,12 +104,16 @@ public class MainMenu implements Screen {
 		batch.draw(buttonRegions[2], mapButtonHelp.getOutputX(), mapButtonHelp.getOutputY(), mapButtonHelp.getOutputWidth(), mapButtonHelp.getOutputHeight());
 
 		bitmapFont.setColor(Color.RED);
-//		bitmapFont.draw(batch, "gameWidth:" + Main.renderData.gameWidth+ ", gameHeight:" + Main.renderData.gameHeight +
-//				"\nscreenWidth:" + Gdx.graphics.getWidth()+", screenHeight:" + Gdx.graphics.getHeight() +
-//				"\nheightScaleConstant:" + mapBackdrop.getHeightScaleConstant() +
-//				"\nwidthScaleConstant:" + mapBackdrop.getWidthScaleConstant() +
-//				"\nTURT_COORDS: X:" + mapLogoTop.getInputX() + ":" + mapLogoTop.getOutputX() + " Y:" + mapLogoTop.getInputY() + ":" + mapLogoTop.getOutputY() +
-//				"\nscreenAspectConstant:" + mapLogoTop.getScreenAspectConstant() + "\ngameAspectConstant:" +mapLogoTop.getGameAspectConstant() +",gsar:" + mapLogoTop.getGsar(), 50, 200);
+		bitmapFont.draw(batch, "gameWidth:" + Main.renderData.gameWidth+ ", gameHeight:" + Main.renderData.gameHeight +
+				"\nscreenWidth:" + Gdx.graphics.getWidth()+", screenHeight:" + Gdx.graphics.getHeight() +
+				"\nheightScaleConstant:" + mapBackdrop.getHeightScaleConstant() +
+				"\nwidthScaleConstant:" + mapBackdrop.getWidthScaleConstant() +
+				"\nTURT_COORDS: X:" + mapLogoTop.getInputX() + ":" + mapLogoTop.getOutputX() + " Y:" + mapLogoTop.getInputY() + ":" + mapLogoTop.getOutputY() +
+				"\nscreenAspectConstant:" + mapLogoTop.getScreenAspectConstant() + "\ngameAspectConstant:" +mapLogoTop.getGameAspectConstant() +",gsar:" + mapLogoTop.getGsar() +
+				"\nTOUCH_X:" + lastTouchX + ", TOUCH_Y:" + lastTouchY +
+				"\nnote:" + note, 50, 200);
+
+
 
 		batch.end();
 

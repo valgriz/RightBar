@@ -1,5 +1,7 @@
 package com.valgriz.rightbar.screen;
 
+import com.badlogic.gdx.Gdx;
+
 /**
  * Created by Steven on 7/8/2015.
  */
@@ -35,8 +37,16 @@ public class Map {
 		updateY(inputY);
 		updateWidth(inputWidth);
 		updateHeight(inputHeight);
+	}
 
-
+	public boolean contains(int x, int y){
+		int contX = x;
+		int contY = Gdx.graphics.getHeight() - y;
+		if(contX > outputX && contX < outputX + outputWidth && contY > outputY && contY < outputY + outputHeight){
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	public void updateWidthScaleConstant(int gameWidth, int screenWidth){
